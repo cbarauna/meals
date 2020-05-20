@@ -1,24 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import "./App.css";
+import api from "./services/api";
+import { Player } from "video-react";
 
 function App() {
+  const [meals, setMeals] = useState([]);
+
+  useEffect(() => {
+    api.get().then((response) => {
+      const { meals } = response.data;
+      setMeals(meals);
+    });
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      {meals.map((meal) => (
+        <>
+          <p>{meal.strMeal}</p>
+          <p>Categoria: {meal.strCategory}</p>
+          <p>Area: {meal.strArea}</p>
+          <p>Instruções: {meal.strInstructions}</p>
+          <p>Tags: {meal.strTags}</p>
+          <img src={meal.strMealThumb} />
+        </>
+      ))}
     </div>
   );
 }
